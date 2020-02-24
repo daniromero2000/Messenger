@@ -20,13 +20,38 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <b-navbar toggleable="md" class="shadow-sm" variant="light" type="light">
+            <b-navbar-toggle target="navbarSupportedContent"  aria-label="{{ __('Toggle navigation') }}">
+                <span class="navbar-toggler-icon"></span>
+            </b-navbar-toggle>
+
+            <b-navbar-brand  href="{{ url('/') }}">         
+           {{ config('app.name', 'Laravel') }}
+            </b-navbar-brand>
+        
+       
+        
+            <b-collapse id="navbarSupportedContent" is-nav>
+              <b-navbar-nav class="ml-auto">
+                @guest
+                <b-nav-item  href="{{ route('login') }}">{{ __('Login') }}</b-nav-item>
+                <b-nav-item  href="{{ route('register') }}" >{{ __('Register') }}</b-nav-item>
+                @else
+                  <b-nav-item-dropdown text="username" right>
+                    <b-dropdown-item href="#">Logout</b-dropdown-item>
+                    <b-dropdown-item href="#">ES</b-dropdown-item>
+                    <b-dropdown-item href="#">RU</b-dropdown-item>
+                    <b-dropdown-item href="#">FA</b-dropdown-item>
+                  </b-nav-item-dropdown>
+                  @endguest
+              </b-navbar-nav>
+            </b-collapse>
+          </b-navbar>
+        <nav class="navbar navbar-expand-md navbar-light bg-white ">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                <a class="navbar-brand">
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -40,7 +65,7 @@
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                <a class="nav-link" href="{{ route('login') }}"></a>
                             </li>
                             @if (Route::has('register'))
                                 <li class="nav-item">
