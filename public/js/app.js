@@ -68768,7 +68768,12 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('example-component', __webp
  */
 
 var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
-  el: '#app'
+  el: '#app',
+  methods: {
+    logout: function logout() {
+      document.getElementById('logout-form').submit();
+    }
+  }
 });
 
 /***/ }),

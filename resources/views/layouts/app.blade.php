@@ -20,6 +20,10 @@
 </head>
 <body>
     <div id="app">
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+            @csrf
+        </form>
+
         <b-navbar toggleable="md" class="shadow-sm" variant="light" type="light">
             <b-navbar-toggle target="navbarSupportedContent"  aria-label="{{ __('Toggle navigation') }}">
                 <span class="navbar-toggler-icon"></span>
@@ -37,12 +41,9 @@
                 <b-nav-item  href="{{ route('login') }}">{{ __('Login') }}</b-nav-item>
                 <b-nav-item  href="{{ route('register') }}" >{{ __('Register') }}</b-nav-item>
                 @else
-                  <b-nav-item-dropdown text="username" right>
-                    <b-dropdown-item href="#">Logout</b-dropdown-item>
-                    <b-dropdown-item href="#">ES</b-dropdown-item>
-                    <b-dropdown-item href="#">RU</b-dropdown-item>
-                    <b-dropdown-item href="#">FA</b-dropdown-item>
-                  </b-nav-item-dropdown>
+                  <b-nav-item-dropdown text=" {{ Auth::user()->name }}" right>
+                    <b-dropdown-item href="#" @click="logout" >Logout</b-dropdown-item>
+                    </b-nav-item-dropdown>
                   @endguest
               </b-navbar-nav>
             </b-collapse>
@@ -54,7 +55,7 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                 </button>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                {{-- <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
 
@@ -72,6 +73,7 @@
                                     <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                                 </li>
                             @endif
+                            
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -85,14 +87,12 @@
                                         {{ __('Logout') }}
                                     </a>
 
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        @csrf
-                                    </form>
+                                    
                                 </div>
                             </li>
                         @endguest
                     </ul>
-                </div>
+                </div> --}}
             </div>
         </nav>
 

@@ -22,6 +22,7 @@
                       class="form-control @error('email') is-invalid @enderror"
                       id="email"
                       type="email"
+                      name="email"
                       required
                       placeholder="Enter email"
                     ></b-form-input>
