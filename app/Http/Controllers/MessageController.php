@@ -15,7 +15,7 @@ class MessageController extends Controller
     public function index()
     {
         // $userSession = auth()->user()->id;
-       return Messages::all();
+        return Messages::all();
     }
 
     /**

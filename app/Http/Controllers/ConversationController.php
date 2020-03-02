@@ -15,7 +15,7 @@ class ConversationController extends Controller
     public function index()
     {
         $userSession = auth()->user()->id;
-        return Conversations::where('user_id',$userSession)->get();
+        return Conversations::where('user_id', $userSession)->get();
     }
 
     /**
