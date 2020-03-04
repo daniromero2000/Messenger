@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class MessageController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -14,8 +15,16 @@ class MessageController extends Controller
      */
     public function index()
     {
-        // $userSession = auth()->user()->id;
-        return Messages::all();
+        $userSession = auth()->user()->id;
+        $datas = Messages::all();
+        foreach ($datas as $key => $data) {
+            if ($datas[$key]['from_id'] == $userSession) {
+                $datas[$key]['from_id'] = true;
+            } else {
+                $datas[$key]['from_id'] = false;
+            }
+        }
+        return $datas;
     }
 
     /**
@@ -36,7 +45,15 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $message = new Messages();
+        $message->from_id = auth()->id();
+        $message->to_id = $request->to_id;
+        $message->content = $request->content;
+        $saved = $message->save();
+
+        $data = [];
+        $data['success'] = $saved;
+        return $data;
     }
 
     /**

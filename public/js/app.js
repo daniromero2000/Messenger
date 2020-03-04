@@ -1952,22 +1952,37 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      messages: []
+      messages: [],
+      newMessage: ""
     };
   },
   mounted: function mounted() {
-    var _this = this;
+    this.getMessages();
+  },
+  methods: {
+    getMessages: function getMessages() {
+      var _this = this;
 
-    axios.get("/api/messages").then(function (response) {
-      console.log(response.data);
-      _this.messages = response.data;
-    });
+      axios.get("/api/messages").then(function (response) {
+        console.log(response.data);
+        _this.messages = response.data;
+      });
+    },
+    storeMessage: function storeMessage() {
+      var _this2 = this;
+
+      var params = {
+        to_id: 2,
+        content: this.newMessage
+      };
+      axios.post("/api/messages", params).then(function (response) {
+        console.log(response.data);
+        _this2.newMessage = '', _this2.getMessages();
+      });
+    }
   }
 });
 
@@ -2083,7 +2098,7 @@ __webpack_require__.r(__webpack_exports__);
     alignTextRight: Boolean
   },
   mounted: function mounted() {
-    console.log("Component mounted.");
+    console.log(this.alignTextRight);
   },
   data: function data() {
     return {
@@ -56719,13 +56734,32 @@ var render = function() {
                     return [
                       _c(
                         "b-form",
+                        {
+                          attrs: { autocomplete: "off" },
+                          on: {
+                            submit: function($event) {
+                              $event.preventDefault()
+                              return _vm.storeMessage($event)
+                            }
+                          }
+                        },
                         [
                           _c(
                             "b-input-group",
                             [
                               _c("b-form-input", {
                                 staticClass: "text-center",
-                                attrs: { placeholder: "Search..." }
+                                attrs: {
+                                  type: "text",
+                                  placeholder: "Enviar..."
+                                },
+                                model: {
+                                  value: _vm.newMessage,
+                                  callback: function($$v) {
+                                    _vm.newMessage = $$v
+                                  },
+                                  expression: "newMessage"
+                                }
                               }),
                               _vm._v(" "),
                               _c(
@@ -56736,7 +56770,7 @@ var render = function() {
                                     {
                                       attrs: {
                                         size: "sm",
-                                        text: "Button",
+                                        type: "submit",
                                         variant: "info"
                                       }
                                     },
@@ -56757,23 +56791,16 @@ var render = function() {
                 }
               ])
             },
-            [
-              _c("message-conversation-component", [
-                _vm._v(
-                  "\n        Cras sit amet nibh libero, in gravida nulla. Nulla\n        vel metus scelerisque ante sollicitudin. nisi\n        vulputate fringilla. Donec lacinia congue felis in\n        faucibus.\n      "
-                )
-              ]),
-              _vm._v(" "),
-              _c(
+            _vm._l(_vm.messages, function(message) {
+              return _c(
                 "message-conversation-component",
-                { attrs: { "align-text-right": "" } },
-                [
-                  _vm._v(
-                    "\n        Cras sit amet nibh libero, in gravida nulla. Nulla\n        vel metus scelerisque ante sollicitudin. nisi\n        vulputate fringilla. Donec lacinia congue felis in\n        faucibus.\n      "
-                  )
-                ]
+                {
+                  key: message.id,
+                  attrs: { "align-text-right": message.from_id }
+                },
+                [_vm._v(_vm._s(message.content))]
               )
-            ],
+            }),
             1
           )
         ],

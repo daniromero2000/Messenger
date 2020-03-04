@@ -2,26 +2,23 @@
   <b-row class="pt-0 h-100" aling-h="center">
     <b-col cols="8" aling-self="center" class="d-none d-md-block">
       <b-card class="h-100 border-0 mt-1" header-tag="header" footer-tag="footer">
-        <message-conversation-component>
-          Cras sit amet nibh libero, in gravida nulla. Nulla
-          vel metus scelerisque ante sollicitudin. nisi
-          vulputate fringilla. Donec lacinia congue felis in
-          faucibus.
-        </message-conversation-component>
-
-        <message-conversation-component align-text-right>
-          Cras sit amet nibh libero, in gravida nulla. Nulla
-          vel metus scelerisque ante sollicitudin. nisi
-          vulputate fringilla. Donec lacinia congue felis in
-          faucibus.
-        </message-conversation-component>
+        <message-conversation-component
+          v-for="message in messages"
+          :key="message.id "
+          :align-text-right="message.from_id"
+        >{{message.content}}</message-conversation-component>
 
         <template v-slot:footer>
-          <b-form>
+          <b-form @submit.prevent="storeMessage" autocomplete="off">
             <b-input-group>
-              <b-form-input class="text-center" placeholder="Search..."></b-form-input>
+              <b-form-input
+                class="text-center"
+                type="text"
+                v-model="newMessage"
+                placeholder="Enviar..."
+              ></b-form-input>
               <b-input-group-append>
-                <b-button size="sm" text="Button" variant="info">Enviar</b-button>
+                <b-button size="sm" type="submit" variant="info">Enviar</b-button>
               </b-input-group-append>
             </b-input-group>
           </b-form>
@@ -49,14 +46,32 @@
 export default {
   data() {
     return {
-      messages: []
+      messages: [],
+      newMessage: ""
     };
   },
   mounted() {
-    axios.get("/api/messages").then(response => {
-      console.log(response.data);
-      this.messages = response.data;
-    });
+    this.getMessages();
+  },
+  methods: {
+    getMessages() {
+      axios.get("/api/messages").then(response => {
+        console.log(response.data);
+        this.messages = response.data;
+      });
+    },
+    storeMessage() {
+      const params = {
+        to_id: 2,
+        content: this.newMessage
+      };
+      axios.post("/api/messages", params).then(response => {
+        console.log(response.data);
+        this.newMessage='',
+        this.getMessages()
+      });
+    }
   }
 };
 </script>
+

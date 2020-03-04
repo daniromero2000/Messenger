@@ -25,7 +25,7 @@ props:{
     alignTextRight: Boolean
 },
   mounted() {
-    console.log("Component mounted.");
+    console.log(this.alignTextRight);
   },
   data() {
       return {
