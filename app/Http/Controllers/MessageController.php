@@ -13,10 +13,22 @@ class MessageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+
         $userSession = auth()->user()->id;
-        $datas = Messages::all();
+        $contactId = $request->contact_id;
+
+        $datas = Messages::where(
+            function ($query) use ($userSession, $contactId) {
+                $query->where('from_id', $userSession)->where('to_id', $contactId);
+            }
+        )->orWhere(
+            function ($query) use ($userSession, $contactId) {
+                $query->where('from_id', $contactId)->where('to_id', $userSession);
+            }
+        )->get();
+
         foreach ($datas as $key => $data) {
             if ($datas[$key]['from_id'] == $userSession) {
                 $datas[$key]['from_id'] = true;

@@ -1956,7 +1956,8 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       messages: [],
-      newMessage: ""
+      newMessage: "",
+      contactId: 2
     };
   },
   mounted: function mounted() {
@@ -1966,7 +1967,7 @@ __webpack_require__.r(__webpack_exports__);
     getMessages: function getMessages() {
       var _this = this;
 
-      axios.get("/api/messages").then(function (response) {
+      axios.get("/api/messages?contact_id=" + this.contactId).then(function (response) {
         console.log(response.data);
         _this.messages = response.data;
       });
@@ -1980,7 +1981,7 @@ __webpack_require__.r(__webpack_exports__);
       };
       axios.post("/api/messages", params).then(function (response) {
         console.log(response.data);
-        _this2.newMessage = '', _this2.getMessages();
+        _this2.newMessage = "", _this2.getMessages();
       });
     }
   }
@@ -2052,12 +2053,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
-    console.log("Component mounted.");
+    this.getConversations();
+  },
+  methods: {
+    getConversations: function getConversations() {
+      axios.get("/api/conversations").then(function (response) {
+        console.log(response.data);
+      });
+    }
   }
 });
 

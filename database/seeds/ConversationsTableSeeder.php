@@ -25,5 +25,12 @@ class ConversationsTableSeeder extends Seeder
             'last_message' => '',
             'last_time' => NULL
         ]);
+        
+        Conversations::create([
+            'user_id' => 1,
+            'contact_id' => 3,
+            'last_message' => '',
+            'last_time' => NULL
+        ]);
     }
 }

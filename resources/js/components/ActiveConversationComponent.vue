@@ -47,7 +47,8 @@ export default {
   data() {
     return {
       messages: [],
-      newMessage: ""
+      newMessage: "",
+      contactId: 2
     };
   },
   mounted() {
@@ -55,7 +56,7 @@ export default {
   },
   methods: {
     getMessages() {
-      axios.get("/api/messages").then(response => {
+      axios.get("/api/messages?contact_id=" + this.contactId).then(response => {
         console.log(response.data);
         this.messages = response.data;
       });
@@ -67,8 +68,7 @@ export default {
       };
       axios.post("/api/messages", params).then(response => {
         console.log(response.data);
-        this.newMessage='',
-        this.getMessages()
+        (this.newMessage = ""), this.getMessages();
       });
     }
   }
