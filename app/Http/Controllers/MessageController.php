@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Messages;
+use App\Message;
 use Illuminate\Http\Request;
 
 class MessageController extends Controller
@@ -19,7 +19,7 @@ class MessageController extends Controller
         $userSession = auth()->user()->id;
         $contactId = $request->contact_id;
 
-        $datas = Messages::where(
+        $datas = Message::where(
             function ($query) use ($userSession, $contactId) {
                 $query->where('from_id', $userSession)->where('to_id', $contactId);
             }
@@ -57,7 +57,7 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
-        $message = new Messages();
+        $message = new Message();
         $message->from_id = auth()->id();
         $message->to_id = $request->to_id;
         $message->content = $request->content;

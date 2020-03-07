@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Conversations;
+use App\Conversation;
 use Illuminate\Http\Request;
 
 class ConversationController extends Controller
@@ -15,7 +15,7 @@ class ConversationController extends Controller
     public function index()
     {
         $userSession = auth()->user()->id;
-        return Conversations::where('user_id', $userSession)->orderBy('updated_at','DESC')->get();
+        return Conversation::where('user_id', $userSession)->orderBy('updated_at','DESC')->get();
     }
 
     /**

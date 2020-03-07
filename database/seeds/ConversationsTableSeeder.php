@@ -1,6 +1,6 @@
 <?php
 
-use App\Conversations;
+use App\Conversation;
 use Illuminate\Database\Seeder;
 
 class ConversationsTableSeeder extends Seeder
@@ -12,23 +12,30 @@ class ConversationsTableSeeder extends Seeder
      */
     public function run()
     {
-        Conversations::create([
+        Conversation::create([
             'user_id' => 1,
             'contact_id' => 2,
             'last_message' => '',
             'last_time' => NULL
         ]);
 
-        Conversations::create([
+        Conversation::create([
             'user_id' => 2,
             'contact_id' => 1,
             'last_message' => '',
             'last_time' => NULL
         ]);
         
-        Conversations::create([
+        Conversation::create([
             'user_id' => 1,
             'contact_id' => 3,
+            'last_message' => '',
+            'last_time' => NULL
+        ]);
+
+        Conversation::create([
+            'user_id' => 3,
+            'contact_id' => 1,
             'last_message' => '',
             'last_time' => NULL
         ]);

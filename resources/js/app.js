@@ -33,7 +33,6 @@ Vue.component('contact-list-component', require('./components/ContactListCompone
 Vue.component('active-conversation-component', require('./components/ActiveConversationComponent.vue').default);
 Vue.component('message-conversation-component', require('./components/MessageConversationComponent.vue').default);
 
-
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

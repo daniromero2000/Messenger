@@ -2024,6 +2024,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    variant: String,
+    conversation: Object
+  },
+  data: function data() {
+    return {};
+  },
   mounted: function mounted() {
     console.log("Component mounted.");
   }
@@ -2053,14 +2060,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     this.getConversations();
   },
+  data: function data() {
+    return {
+      conversations: []
+    };
+  },
   methods: {
     getConversations: function getConversations() {
+      var _this = this;
+
       axios.get("/api/conversations").then(function (response) {
         console.log(response.data);
+        _this.conversations = response.data;
       });
     }
   }
@@ -2107,7 +2124,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      content: 'abc'
+      content: "abc"
     };
   }
 });
@@ -56895,10 +56912,12 @@ var render = function() {
               attrs: { cols: "6", "aling-self": "center" }
             },
             [
-              _c("p", { staticClass: "mb-1" }, [_vm._v("Daniel Romero")]),
+              _c("p", { staticClass: "mb-1" }, [
+                _vm._v(_vm._s(_vm.conversation.contact_name))
+              ]),
               _vm._v(" "),
               _c("p", { staticClass: "text-muted small mb-1" }, [
-                _vm._v("Tù: Hata luego")
+                _vm._v(_vm._s(_vm.conversation.last_message))
               ])
             ]
           ),
@@ -56906,7 +56925,11 @@ var render = function() {
           _c(
             "b-col",
             { staticClass: "d-none d-md-block", attrs: { cols: "3" } },
-            [_c("p", { staticClass: "text-muted small" }, [_vm._v("1: 37 pm")])]
+            [
+              _c("p", { staticClass: "text-muted small" }, [
+                _vm._v(_vm._s(_vm.conversation.last_time))
+              ])
+            ]
           )
         ],
         1
@@ -56953,13 +56976,12 @@ var render = function() {
       _vm._v(" "),
       _c(
         "b-list-group",
-        [
-          _c("contact-component"),
-          _vm._v(" "),
-          _c("contact-component"),
-          _vm._v(" "),
-          _c("contact-component")
-        ],
+        _vm._l(_vm.conversations, function(conversation) {
+          return _c("contact-component", {
+            key: conversation.id,
+            attrs: { conversation: conversation }
+          })
+        }),
         1
       )
     ],
