@@ -35,7 +35,7 @@
         class="mt-1"
         alt="Circle image"
       ></b-img>
-      <p>Usuario</p>
+      <p>{{contactName }}</p>
       <hr />
       <b-form-checkbox>Desactivar Notificaciònes</b-form-checkbox>
     </b-col>
@@ -44,11 +44,14 @@
 
 <script>
 export default {
+  props: {
+    contactId: Number,
+    contactName: String
+  },
   data() {
     return {
       messages: [],
-      newMessage: "",
-      contactId: 2
+      newMessage: ""
     };
   },
   mounted() {
@@ -70,6 +73,11 @@ export default {
         console.log(response.data);
         (this.newMessage = ""), this.getMessages();
       });
+    }
+  },
+  watch: {
+    contactId(value) {
+      this.getMessages();
     }
   }
 };
