@@ -1979,7 +1979,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       var params = {
-        to_id: 2,
+        to_id: this.contactId,
         content: this.newMessage
       };
       axios.post("/api/messages", params).then(function (response) {
@@ -2132,6 +2132,11 @@ __webpack_require__.r(__webpack_exports__);
     return {
       selectedConversation: null
     };
+  },
+  mounted: function mounted() {
+    Echo.channel('example').listen('MessageSent', function (e) {
+      console.log(e);
+    });
   },
   methods: {
     changeActiveCoversation: function changeActiveCoversation(conversation) {
@@ -79349,8 +79354,8 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_2__["default"]({
   broadcaster: 'pusher',
-  key: "",
-  cluster: "mt1",
+  key: "ad5bd03565e8864b09a1",
+  cluster: "us2",
   encrypted: true
 });
 

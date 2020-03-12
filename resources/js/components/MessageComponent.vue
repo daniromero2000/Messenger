@@ -16,10 +16,16 @@
 </template>
 <script>
 export default {
-  data() {
+  data() { 
     return {
       selectedConversation: null
     };
+  },
+  mounted() {
+    Echo.channel('example')
+    .listen('MessageSent', (e) => {
+        console.log(e);
+    });
   },
   methods: {
     changeActiveCoversation(conversation) {
