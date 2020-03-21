@@ -9,6 +9,7 @@
           v-if="selectedConversation"
           :contact-id="selectedConversation.contact_id"
           :contact-name="selectedConversation.contact_name"
+          :messages="messages"
         ></active-conversation-component>
       </b-col>
     </b-row>
@@ -16,21 +17,35 @@
 </template>
 <script>
 export default {
-  data() { 
+  props: {
+    userId: Number
+  },
+  data() {
     return {
-      selectedConversation: null
+      selectedConversation: null,
+      messages: []
     };
   },
   mounted() {
-    Echo.channel('example')
-    .listen('MessageSent', (e) => {
-        console.log(e);
+    Echo.channel("example").listen("MessageSent", data => {
+      const message = data.message;
+      message.from_id = (this.userId == message.from_id);
+      console.log(this.userId);
+      this.messages.push(data.message);
     });
   },
   methods: {
     changeActiveCoversation(conversation) {
-      // console.log('nueva', conversation)
       this.selectedConversation = conversation;
+      this.getMessages();
+    },
+    getMessages() {
+      axios
+        .get("/api/messages?contact_id=" + this.selectedConversation.contact_id)
+        .then(response => {
+          // console.log(response.data);
+          this.messages = response.data;
+        });
     }
   }
 };

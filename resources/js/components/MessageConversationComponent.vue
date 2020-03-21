@@ -25,7 +25,7 @@ export default {
     alignTextRight: Boolean
   },
   mounted() {
-    console.log(this.alignTextRight);
+    // console.log(this.alignTextRight);
   },
   data() {
     return {
