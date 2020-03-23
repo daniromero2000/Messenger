@@ -1,13 +1,14 @@
 <template>
   <b-row class="pt-0 h-100" aling-h="center">
     <b-col cols="8" aling-self="center" class="d-none d-md-block">
-      <b-card class="h-100 border-0 mt-1" header-tag="header" footer-tag="footer">
-        <message-conversation-component
-          v-for="message in messages"
-          :key="message.id "
-          :align-text-right="message.from_id"
-        >{{message.content}}</message-conversation-component>
-
+      <b-card no-body class="h-100 border-0 mt-1" header-tag="header" footer-tag="footer">
+        <b-card-body class="container-messages-scroll">
+          <message-conversation-component
+            v-for="message in messages"
+            :key="message.id "
+            :align-text-right="message.from_id"
+          >{{message.content}}</message-conversation-component>
+        </b-card-body>
         <template v-slot:footer>
           <b-form @submit.prevent="storeMessage" autocomplete="off">
             <b-input-group>
@@ -41,7 +42,12 @@
     </b-col>
   </b-row>
 </template>
-
+<style>
+.container-messages-scroll {
+  max-height: calc(100vh - 127px);
+  overflow: auto;
+}
+</style>
 <script>
 export default {
   props: {
@@ -54,25 +60,34 @@ export default {
       newMessage: ""
     };
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
-      storeMessage() {
+    storeMessage() {
       const params = {
         to_id: this.contactId,
         content: this.newMessage
       };
       axios.post("/api/messages", params).then(response => {
-        // console.log(response.data);
-        (this.newMessage = "");
+        console.log(response.data)
+       if(response.data.success){
+         this.newMessage = "";
+         this.$emit('messageCreated', response.data.message)
+       }
       });
+    },
+    scrollBottom() {
+      const scroll = document.querySelector(".container-messages-scroll");
+      scroll.scrollTop = scroll.scrollHeight;
     }
   },
+  updated() {
+    this.scrollBottom();
+  }
   // watch: {
-  //   contactId(value) {
-  //     this.getMessages();
-  //   }
-  // }
+  //   // contactId(value) {
+  //   //   this.getMessages();
+  //   // }
+  //     }
 };
 </script>
 
