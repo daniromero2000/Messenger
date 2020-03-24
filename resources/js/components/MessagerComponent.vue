@@ -2,7 +2,10 @@
   <b-container fluid class="h-100">
     <b-row class="h-100">
       <b-col cols="4 pt-2">
-        <contact-list-component v-on:conversationSelected="changeActiveCoversation($event)"></contact-list-component>
+        <contact-list-component
+          v-on:conversationSelected="changeActiveCoversation($event)"
+          :conversations="conversations"
+        ></contact-list-component>
       </b-col>
       <b-col cols="8">
         <active-conversation-component
@@ -24,11 +27,14 @@ export default {
   data() {
     return {
       selectedConversation: null,
-      messages: []
+      messages: [],
+      conversations: []
     };
   },
   mounted() {
-    Echo.channel("user." + this.userId).listen("MessageSent", data => {
+    this.getConversations();
+
+    Echo.private("users." + this.userId).listen("MessageSent", data => {
       console.log(this.userId);
       const message = data.message;
       this.addMessage(message);
@@ -49,9 +55,31 @@ export default {
     },
     addMessage(message) {
       console.log(message);
+      const conversation = this.conversations.find(conversation => {
+        return (
+          conversation.contact_id == message.from_id ||
+          conversation.contact_id == message.to_id
+        );
+      });
 
-      message.from_id = this.userId == message.from_id;
-      this.messages.push(message);
+      const author = this.userId === message.from_id ? "Tu" : conversation.contact_name;
+
+      conversation.last_message = author + ' : ' + message.content;
+      conversation.last_time = message.created_at;
+
+      if (
+        this.selectedConversation.contact_id == message.to_id ||
+        this.selectedConversation.contact_id == message.from_id
+      ) {
+        message.from_id = this.userId == message.from_id;
+        this.messages.push(message);
+      }
+    },
+    getConversations() {
+      axios.get("/api/conversations").then(response => {
+        // console.log(response.data);
+        this.conversations = response.data;
+      });
     }
   }
 };
