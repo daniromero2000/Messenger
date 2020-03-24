@@ -34,6 +34,15 @@ export default {
   mounted() {
     this.getConversations();
 
+    Echo.join("messenger")
+      .here(users => {
+        console.log("online", users);
+        users.forEach(user => this.changeStatus(user, true));
+      })
+      .joining(user => this.changeStatus(user, true))
+
+      .leaving(user => this.changeStatus(user, false));
+
     Echo.private("users." + this.userId).listen("MessageSent", data => {
       console.log(this.userId);
       const message = data.message;
@@ -41,6 +50,15 @@ export default {
     });
   },
   methods: {
+    changeStatus(user, status) {
+      const index = this.conversations.findIndex(conversation => {
+        return conversation.contact_id == user.id;
+      });
+      console.log(index);
+      if (index >= 0) {
+        this.$set(this.conversations[index], "online", status);
+      }
+    },
     changeActiveCoversation(conversation) {
       this.selectedConversation = conversation;
       this.getMessages();
@@ -62,9 +80,10 @@ export default {
         );
       });
 
-      const author = this.userId === message.from_id ? "Tu" : conversation.contact_name;
+      const author =
+        this.userId === message.from_id ? "Tu" : conversation.contact_name;
 
-      conversation.last_message = author + ' : ' + message.content;
+      conversation.last_message = author + " : " + message.content;
       conversation.last_time = message.created_at;
 
       if (

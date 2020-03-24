@@ -14,15 +14,8 @@
       </b-col>
       <b-col cols="6" aling-self="center" class="d-none d-md-block">
         <p class="mb-1">
-          <b-img
-            blank
-            width="10"
-            height="10"
-            rounded="circle"
-            blank-color="red"
-            alt="Circle image"
-          ></b-img>
-          {{conversation.contact_name}}
+           <status-component :online="conversation.online"></status-component>
+                 {{conversation.contact_name}}
         </p>
         <p class="text-muted small mb-1">{{conversation.last_message}}</p>
       </b-col>
