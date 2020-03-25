@@ -1,36 +1,34 @@
 <template>
-  <div>
-    <b-form>
-      <b-form-input class="text-center" placeholder="Search..."></b-form-input>
-    </b-form>
-    <b-list-group>
-      <contact-component
-        v-for="conversation in conversations"
-        :key="conversation.id"
-        :conversation="conversation"
-        @click.native="selectConversation(conversation)"
-      ></contact-component>
+  <b-list-group>
+    <contact-component
+      v-for="conversation in conversations"
+      :key="conversation.id"
+      :conversation="conversation"
+      :selected="selectConversationId === conversation.id"
+      @click.native="selectConversation(conversation)"
+    ></contact-component>
 
-      <!-- <contact-component></contact-component>
+    <!-- <contact-component></contact-component>
       <contact-component></contact-component>
-      <contact-component></contact-component>-->
-    </b-list-group>
-  </div>
+    <contact-component></contact-component>-->
+  </b-list-group>
 </template>
 
 <script>
 export default {
-  props:{
-conversations: Array
+  props: {
+    conversations: Array
   },
-   data() {
+  data() {
     return {
+      selectConversationId: null
     };
   },
   methods: {
-       selectConversation(conversation) {
+    selectConversation(conversation) {
       // console.log(conversation);
-      this.$emit('conversationSelected', conversation);
+      this.selectConversationId = conversation.id;
+      this.$emit("conversationSelected", conversation);
     }
   }
 };

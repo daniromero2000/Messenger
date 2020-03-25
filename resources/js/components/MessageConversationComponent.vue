@@ -1,6 +1,16 @@
 <template>
   <b-media class="mb-3" vertical-align="center" :right-align="alignTextRight">
     <template v-slot:aside>
+      <!-- <b-img
+        blank
+        :src="contactImage"
+        width="48"
+        height="48"
+        slot="aside"
+        rounded="circle"
+        class="mt-1"
+        alt="Circle image"
+      ></b-img>-->
       <b-img
         blank
         width="48"
@@ -22,7 +32,8 @@
 <script>
 export default {
   props: {
-    alignTextRight: Boolean
+    alignTextRight: Boolean,
+    contactImage: String
   },
   mounted() {
     // console.log(this.alignTextRight);

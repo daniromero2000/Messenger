@@ -5,16 +5,21 @@
  */
 
 import Vue from 'vue'
+import Vuex from 'vuex'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
-
 // Install BootstrapVue
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
 
+Vue.use(Vuex)
+
+
+
 require('./bootstrap');
 
 window.Vue = require('vue');
+// window.eventBus = new Vue();
 
 
 /**
@@ -39,10 +44,17 @@ Vue.component('status-component', require('./components/StatusComponent.vue').de
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+const store = new Vuex.Store({
+    state: {
+        messages: []
+    }
+});
+
 const app = new Vue({
     el: '#app',
-    methods:{
-        logout(){
+    store,
+    methods: {
+        logout() {
             document.getElementById('logout-form').submit();
         }
     }

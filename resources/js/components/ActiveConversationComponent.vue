@@ -8,6 +8,12 @@
             :key="message.id "
             :align-text-right="message.from_id"
           >{{message.content}}</message-conversation-component>
+          <!-- <message-conversation-component
+            v-for="message in messages"
+            :key="message.id "
+            :align-text-right="message.from_id"
+            :contact-image="message.from_id ? myImage : contactImage"
+          >{{message.content}}</message-conversation-component>-->
         </b-card-body>
         <template v-slot:footer>
           <b-form @submit.prevent="storeMessage" autocomplete="off">
@@ -27,6 +33,15 @@
       </b-card>
     </b-col>
     <b-col cols="4" class="d-none d-md-block">
+      <!-- <b-img
+        blank
+        width="48"
+        :src="contactImage"
+        height="48"
+        rounded="circle"
+        class="mt-1"
+        alt="Circle image"
+      ></b-img>-->
       <b-img
         blank
         width="48"
@@ -52,8 +67,9 @@
 export default {
   props: {
     contactId: Number,
-    contactName: String,
-    messages: Array
+    contactName: String
+    // contactImage: String,
+    // myImage: String,
   },
   data() {
     return {
@@ -68,16 +84,21 @@ export default {
         content: this.newMessage
       };
       axios.post("/api/messages", params).then(response => {
-        console.log(response.data)
-       if(response.data.success){
-         this.newMessage = "";
-         this.$emit('messageCreated', response.data.message)
-       }
+        console.log(response.data);
+        if (response.data.success) {
+          this.newMessage = "";
+          this.$emit("messageCreated", response.data.message);
+        }
       });
     },
     scrollBottom() {
       const scroll = document.querySelector(".container-messages-scroll");
       scroll.scrollTop = scroll.scrollHeight;
+    }
+  },
+  computed: {
+    messages() {
+      return this.$store.state.messages;
     }
   },
   updated() {
