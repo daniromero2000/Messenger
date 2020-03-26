@@ -32,7 +32,9 @@ window.Vue = require('vue');
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
-Vue.component('messager-component', require('./components/MessagerComponent.vue').default);
+Vue.component('contact-form-component', require('./components/ContactFormComponent.vue').default);
+
+Vue.component('messanger-component', require('./components/MessangerComponent.vue').default);
 Vue.component('contact-component', require('./components/ContactComponent.vue').default);
 Vue.component('contact-list-component', require('./components/ContactListComponent.vue').default);
 Vue.component('active-conversation-component', require('./components/ActiveConversationComponent.vue').default);
@@ -46,7 +48,57 @@ Vue.component('status-component', require('./components/StatusComponent.vue').de
 
 const store = new Vuex.Store({
     state: {
-        messages: []
+        messages: [],
+        selectedConversation: null,
+        conversations: [],
+        querySearch: "",
+    },
+    mutations: {
+        newMessagesList(state, messages) {
+            state.messages = messages;
+        },
+        addNewMessage(state, message) {
+            state.messages.push(message);
+        },
+        selectConversation(state, conversation) {
+            state.selectedConversation = conversation;
+        },
+        newQuerySearch(state, newValue) {
+            state.querySearch = newValue;
+        },
+        newConversationsList(state, conversations) {
+            state.conversations = conversations;
+        }
+    },
+    actions: {
+        getMessages(context, conversation) {
+            axios
+                .get("/api/messages?contact_id=" + conversation.contact_id)
+                .then(response => {
+                    // console.log(response.data);
+                    context.commit('selectConversation', conversation);
+                    context.commit("newMessagesList", response.data);
+                    // this.$store.state.messages = response.data;
+                });
+        },
+        getConversations(context) {
+            axios.get("/api/conversations").then(response => {
+                // console.log(response.data);
+                context.commit("newConversationsList", response.data);
+            });
+        }
+    },
+    getters: {
+        conversationFiltered(state) {
+            return state.conversations.filter(conversation => {
+                return (
+                    !state.querySearch ||
+                    conversation.contact_name
+                        .toLowerCase()
+                        .indexOf(state.querySearch.toLowerCase()) > -1
+                );
+            });
+        }
     }
 });
 

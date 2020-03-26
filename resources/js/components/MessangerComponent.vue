@@ -2,18 +2,9 @@
   <b-container fluid class="h-100">
     <b-row class="h-100">
       <b-col cols="4 pt-2">
-        <b-form>
-          <b-form-input
-            type="text"
-            v-model="querySearch"
-            class="text-center"
-            placeholder="Search..."
-          ></b-form-input>
-        </b-form>
-        <contact-list-component
-          v-on:conversationSelected="changeActiveCoversation($event)"
-          :conversations="conversationFiltered"
-        ></contact-list-component>
+        <contact-form-component></contact-form-component>
+
+        <contact-list-component></contact-list-component>
       </b-col>
       <b-col cols="8">
         <!-- <active-conversation-component
@@ -41,16 +32,7 @@ export default {
   props: {
     user: Object
   },
-  data() {
-    return {
-      selectedConversation: null,
-      conversations: [],
-      querySearch: ""
-    };
-  },
   mounted() {
-    this.getConversations();
-
     Echo.join("messenger")
       .here(users => {
         console.log("online", users);
@@ -65,29 +47,22 @@ export default {
       const message = data.message;
       this.addMessage(message);
     });
+    this.$store.dispatch("getConversations");
   },
   methods: {
     changeStatus(user, status) {
-      const index = this.conversations.findIndex(conversation => {
+      const index = this.$store.state.conversations.findIndex(conversation => {
         return conversation.contact_id == user.id;
       });
       console.log(index);
       if (index >= 0) {
-        this.$set(this.conversations[index], "online", status);
+        this.$set(this.$store.state.conversations[index], "online", status);
       }
     },
-    changeActiveCoversation(conversation) {
-      this.selectedConversation = conversation;
-      this.getMessages();
-    },
-    getMessages() {
-      axios
-        .get("/api/messages?contact_id=" + this.selectedConversation.contact_id)
-        .then(response => {
-          // console.log(response.data);
-          this.$store.state.messages = response.data;
-        });
-    },
+    // changeActiveCoversation(conversation) {
+    //   this.selectedConversation = conversation;
+    //   this.getMessages();
+    // },
     addMessage(message) {
       console.log(message);
       const conversation = this.conversations.find(conversation => {
@@ -108,30 +83,19 @@ export default {
         this.selectedConversation.contact_id == message.from_id
       ) {
         message.from_id = this.user.id == message.from_id;
-        this.$store.state.messages.push(message);
+        this.$store.commit("addNewMessage", message);
+
+        // this.$store.state.messages.push(message);
       }
-    },
-    getConversations() {
-      axios.get("/api/conversations").then(response => {
-        // console.log(response.data);
-        this.conversations = response.data;
-      });
     }
   },
   computed: {
+    selectedConversation() {
+      return this.$store.state.selectedConversation;
+    }
     // myImageUrl() {
     //   return "/users/" + this.user.image;
     // },
-    conversationFiltered() {
-      return this.conversations.filter(conversations => {
-        return (
-          !this.querySearch ||
-          conversations.contact_name
-            .toLowerCase()
-            .indexOf(this.querySearch.toLowerCase()) > -1
-        );
-      });
-    }
   }
 };
 </script>
